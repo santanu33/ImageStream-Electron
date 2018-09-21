@@ -1,0 +1,21 @@
+{
+  "name": "imagestream-electron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --out=out --icon=assets/app-icon/mac/app.icns --osx-sign.identity='Developer ID Application: GitHub' --extend-info=assets/mac/info.plist"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^3.0.0",
+    "electron-packager": "^12.1.0",
+    "electron-winstaller": "^2.2.0"
+  },
+  "dependencies": {
+    "move-file": "^1.0.0"
+  }
+}

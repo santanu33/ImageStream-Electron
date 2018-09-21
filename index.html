@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Scanner</title>
+</head>
+<style>
+.imageContainer{
+	text-align:center;
+	border:1px solid;
+	margin:auto
+}
+
+.imageContainer img{
+	margin:5px;
+	height:100px;
+	width:100px;
+}
+
+.imgPreviewFirst{
+	display:none
+}
+.imgPreview{
+
+}
+
+.imageThumbnailContainer{
+	width:100%;
+	height:100%;
+}
+
+</style>
+<script>
+
+  window.onload=function(){
+    const path = require('path');
+    const moveFile = require('move-file');
+    const fs = require('fs');
+    const inputFolder = '/Users/santanu/Downloads/katy';
+    let previousFileInitial="";
+    console.log()
+    setInterval(function(){ 
+      fs.readdir(inputFolder, (err, files) => {
+      
+      files.forEach(file => {
+        if(file.endsWith(".jpg")){
+          
+         
+        console.log(previousFileInitial);
+        let fileIndex = file.lastIndexOf("_");
+        console.log(fileIndex);
+        let fileName = file.substring(fileIndex+1,fileIndex+2);
+        document.getElementById('ItemPreview_'+fileName).src = inputFolder+"/"+file;
+        var bigImageSrc = document.getElementById('thumbnail').src;
+        if(fileName == "1" ){
+            document.getElementById('thumbnail').src =inputFolder+"/"+file;
+          }
+        }
+        if(files.length>=5){
+          var n = file.lastIndexOf("_");
+          previousFileInitial = file.substring(0,n);
+          (async () => {
+              await moveFile(inputFolder+"/"+file, '/Users/santanu/Downloads/future'+"/"+file);
+          })();
+        }
+      });
+    }) 
+    
+    }, 3000);
+
+    
+    
+}
+    
+
+</script>
+<script>
+    function showLargeImage(elem){
+      document.getElementById('thumbnail').src = elem;
+     // console.log(previousFileInitial);
+    }
+</script>
+<body>
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<div id="main-content" class="container">
+   
+    <div class="row">
+        <div class="imageContainer">
+            <table id="conversation" class="table table-striped">
+                <thead>
+                <tr>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="greetings" class="imageContainer"> 
+               		 <img id="ItemPreview_1" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);"/>
+               		 <img id="ItemPreview_2" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);"/>
+               		 <img id="ItemPreview_3" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);"/>
+               		 <img id="ItemPreview_4" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);"/>  
+               		 <img id="ItemPreview_5" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);"/> 
+               		 
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="imageThumbnailContainer">
+    <img id="thumbnail"  />
+    </div>
+    <button id="clean">clean cookie</button>
+    <button id="move">move old files</button>
+    
+</div>
+</body>
+</html>
