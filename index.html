@@ -30,24 +30,27 @@
 
 </style>
 <script>
+var loadedImage = 0;
+const moveFile = require('move-file');
+//const inputFolder = '/Users/santanu/Downloads/katy';
+//const outputFoler = '/Users/santanu/Downloads/future';
 
+const inputFolder = 'C://Users/public/input';
+const outputFoler = 'C://Users/public/output';
+const exec = require('child_process').exec;
+const path = require('path');
+const fs = require('fs');
   window.onload=function(){
-    const path = require('path');
-    const moveFile = require('move-file');
-    var exec = require('child_process').exec;
-    const fs = require('fs');
-    const inputFolder = 'C://Users/public/input';
-    const outputFoler = 'C://Users/public/output';
-    let previousFileInitial="";
+
     console.log()
     setInterval(function(){ 
       fs.readdir(inputFolder, (err, files) => {
       
       files.forEach(file => {
         if(file.endsWith(".jpg")){
-          
+
+        
          
-        console.log(previousFileInitial);
         let fileIndex = file.lastIndexOf("_");
         console.log(fileIndex);
         let fileName = file.substring(fileIndex+1,fileIndex+2);
@@ -57,14 +60,10 @@
             document.getElementById('thumbnail').src =inputFolder+"/"+file;
           }
         }
-        if(files.length>=5){
-          var n = file.lastIndexOf("_");
-          previousFileInitial = file.substring(0,n);
-          (async () => {
-              await moveFile(inputFolder+"/"+file, outputFoler+"/"+file);
-          })();
-        }
+        
+        
       });
+     
     }) 
     
     }, 3000);
@@ -78,13 +77,24 @@
 <script>
     function showLargeImage(elem){
       document.getElementById('thumbnail').src = elem;
-     // console.log(previousFileInitial);
     }
     function executeShellScript(elem){
         var exec = require('child_process').exec;
         exec('notepad', function callback(error, stdout, stderr){
                 console.log(stdout);
             });
+    }
+    function reloadImage(){
+        for(let i =0;i<=5;i++){
+            var elem = document.getElementById('ItemPreview_'+i);
+            elem.src = elem.src;
+        }
+    }
+    function setLoadingFlags(file){
+        var file = file.substring(file.lastIndexOf("/")+1);
+        (async () => {
+            await moveFile(inputFolder+"/"+file, outputFoler+"/"+file);
+        })();
     }
 </script>
 <body>
@@ -103,17 +113,18 @@
                 </thead>
                 <tbody id="greetings" class="imageContainer"> 
                     
-               		 <img id="ItemPreview_1" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);"/>
-               		 <img id="ItemPreview_2" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);"/>
-               		 <img id="ItemPreview_3" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);"/>
-               		 <img id="ItemPreview_4" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);"/>  
-               		 <img id="ItemPreview_5" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);"/> 
+               		 <img id="ItemPreview_1" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);" onload="setLoadingFlags(event.srcElement.src);"/>
+               		 <img id="ItemPreview_2" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);" onload="setLoadingFlags(event.srcElement.src);"/>
+               		 <img id="ItemPreview_3" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);" onload="setLoadingFlags(event.srcElement.src);"/>
+               		 <img id="ItemPreview_4" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);" onload="setLoadingFlags(event.srcElement.src);"/>  
+               		 <img id="ItemPreview_5" class="imgPreview"  onclick="showLargeImage(event.srcElement.src);" onload="setLoadingFlags(event.srcElement.src);"/> 
                		 
                 </tbody>
             </table>
         </div>
     </div>
     <button id="runScript" onclick="executeShellScript(event);">Run Script</button>
+    <button id="reloadImage" onclick="reloadImage();">Reload Images</button>
     <div id="imageThumbnailContainer">
     <img id="thumbnail"  />
     </div>
